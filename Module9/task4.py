@@ -28,8 +28,8 @@ def all_variants2(text, length=1, step=1):
         if length + step > len(text):
             return
         # Рекурсивно вызываем функцию
-        for i in all_variants2(text, length + step, step):
-            yield i
+        for _ in all_variants2(text, length + step, step):
+            yield _
 
 
 a = all_variants("abc")
