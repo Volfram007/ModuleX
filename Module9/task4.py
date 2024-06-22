@@ -36,8 +36,8 @@ for i in a:
     print(i)
 
 # рекурсивно вызываем функцию
-a = all_variants2("abс")
 print('\nЧерез рекурсию')
+a = all_variants2("abс")
 for i in a:
     print(i)
 
