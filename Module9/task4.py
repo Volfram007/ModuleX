@@ -18,7 +18,27 @@ def all_variants(text):
             yield text[start % ln]
 
 
+def all_variants2(text, length=1, step=1):
+    # Цикл по всем возможным началам подстроки
+    for start in range(len(text) - length + 1):
+        yield text[start:start + length]
+
+    if step < len(text):
+        # Завершаем рекурсию
+        if length + step > len(text):
+            return
+        # Рекурсивно вызываем функцию
+        for i in all_variants2(text, length + step, step):
+            yield i
+
+
 a = all_variants("abc")
+for i in a:
+    print(i)
+
+# рекурсивно вызываем функцию
+a = all_variants2("abс")
+print('\nЧерез рекурсию')
 for i in a:
     print(i)
 
