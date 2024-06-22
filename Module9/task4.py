@@ -22,11 +22,10 @@ def all_variants2(text, length=1, step=1):
     # Цикл по всем возможным началам подстроки
     for start in range(len(text) - length + 1):
         yield text[start:start + length]
-
-    if step < len(text):
-        # Завершаем рекурсию
-        if length + step > len(text):
-            return
+    # Завершаем рекурсию
+    if length + step > len(text):
+        return
+    else:
         # Рекурсивно вызываем функцию
         for _ in all_variants2(text, length + step, step):
             yield _
