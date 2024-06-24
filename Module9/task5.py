@@ -1,29 +1,37 @@
-# from time import perf_counter
+# Домашнее задание по теме "Декораторы"
+#   Задание:
+# 1. Написать функцию sum_three, которая складывает 3 числа.
+# 2. Написать функцию-декоратор is_prime, которая проверяет результат функции sum_three на простоту и выводит
+#   "Простое" или "Составное".
+import random
 
 
-# def speedTestTimes(func):
-#     def wrapper(*args, **kwargs):
-#         start_time = time.time()  # Время начала работы программы
-#
-#         result = func(*args, **kwargs)
-#
-#         end_time = time.time()  # Время начала работы программы# Время окончания работы программы
-#         elapsed_time = round(end_time - start_time, 4)  # Время работы программы
-#         print(f"Время выполнения: {elapsed_time}сек. {func}")  # Время выполнения
-#         return result
-#
-#     return wrapper
+def is_prime(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        if result <= 1:
+            print("Ни простое, ни составное")
+        else:
+            is_prime_bool = True
+            for i in range(2, int(result ** 0.5) + 1):
+                if result % i == 0:
+                    is_prime_bool = False
+                    break
+            if is_prime_bool:
+                print(f"{result} Простое")
+            else:
+                print(f"{result} Составное")
+        return result
+
+    return wrapper
 
 
-# def speedTest(func):
-#     def wrapper(*args, **kwargs):
-#         start_time = perf_counter()  # Время начала работы программы
-#
-#         result = func(*args, **kwargs)
-#
-#         end_time = perf_counter()  # Время окончания работы программы
-#         elapsed_time = end_time - start_time  # Время работы программы
-#         print(f"Время выполнения: {elapsed_time} {func}")  # Время выполнения
-#         return result
-#
-#     return wrapper
+@is_prime
+def sum_three(a, b, c):
+    return a + b + c
+
+
+# Пример использования
+sum_three(2, 3, 6)  # "Простое"
+sum_three(4, 6, 2)  # "Составное"
+sum_three(0, 0, 0)  # "Ни простое, ни составное"
