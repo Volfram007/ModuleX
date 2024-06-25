@@ -28,7 +28,8 @@ class Knight:
 def Fortress(count, knight):
     for attack in range(round(count / knight.skill)):
         print(
-            f'\033[97m{knight.name}\033[{knight.color}m, сражается день {attack + 1}.\tОсталось {count - (attack + 1) * knight.skill} воинов.')
+            f'\033[97m{knight.name}\033[{knight.color}m'
+            f', сражается день {attack + 1}.\tОсталось {count - (attack + 1) * knight.skill} воинов.')
         time.sleep(1)
     print(f'\033[91m{knight.name} Победил всех!')
 
