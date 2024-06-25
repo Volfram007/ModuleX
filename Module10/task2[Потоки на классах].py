@@ -14,29 +14,37 @@ from threading import Thread
 class Knight:
     name = ''
     skill = 0
-    active = 'На посту'
+    color = '0'
 
-    def __init__(self, name, skill):
+    def __init__(self, name, skill, color=0):
         self.name = name
         self.skill = skill
+        self.color = color
 
     def __str__(self):
-        return f'Имя:\033[93m{self.name}\033[0m \tУмение:\033[91m{self.skill} \t\033[0m[{self.active}]'
+        return f'\033[0mИмя:\033[93m{self.name}\033[0m \tУмение:\033[91m{self.skill}'
 
 
 def Fortress(count, knight):
-    knight.active = 'На прогулке'
-    print(knight)
     for attack in range(round(count / knight.skill)):
-        ...
+        print(
+            f'\033[97m{knight.name}\033[{knight.color}m, сражается день {attack + 1}.\tОсталось {count - (attack + 1) * knight.skill} воинов.')
+        time.sleep(1)
+    print(f'\033[91m{knight.name} Победил всех!')
 
 
-sir = Knight('Lancelot', 20)
-sir2 = Knight('Galahad', 10)
+sir = Knight('Lancelot', 20, 94)
+sir2 = Knight('Galahad', 10, 93)
+
+thread1 = Thread(target=Fortress, args=(100, sir))
+thread2 = Thread(target=Fortress, args=(100, sir2))
 
 print(sir)
-print(f'На нас напали!')
-thread1 = Thread(Fortress(100, sir))
+print(sir2)
 
-# thread1.start()
-# thread1.join()
+print(f'\tНа нас напали!'.upper())
+
+thread1.start()
+thread2.start()
+thread1.join()
+thread2.join()
