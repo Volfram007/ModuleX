@@ -6,8 +6,8 @@
 
 
 def is_prime(func):
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
+    def wrapper(*args):
+        result = func(*args)
         if result <= 1:
             print("Ни простое, ни составное")
         else:
