@@ -22,7 +22,6 @@ class Shop:
     def add(self, *products):
         current_products = self.get_products().splitlines()  # Загружаем список продуктов из файла
         current_product_names = {line.split(', ')[0] for line in current_products}  # Извлечение имен продуктов
-        # print('--', current_product_names)
         with open(self.__file_name, 'a', encoding='utf-8') as file:
             for product in products:  # Проход по всем переданным продуктам
                 if product.name not in current_product_names:  # Проверка, если продукт еще не добавлен
