@@ -2,9 +2,9 @@ from random import randint
 
 
 class Building:
-    def __init__(self, numberOfFloors, buildingType):
-        self.numberOfFloors = numberOfFloors
-        self.buildingType = buildingType
+    def __init__(self, number_of_floors, building_type):
+        self.numberOfFloors = number_of_floors
+        self.buildingType = building_type
 
     def __eq__(self, other):
         # Сравниваем количество этажей и тип здания
