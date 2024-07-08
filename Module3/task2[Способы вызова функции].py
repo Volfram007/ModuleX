@@ -12,17 +12,16 @@ def send_email(message, recipient, sender='university.help@gmail.com'):
     # Проверка отправителя
     sender_valid, sender_error_msg = is_valid_email(sender)
     if not sender_valid:
-        # print(sender_error_msg)
+        # print('\033[33msender_valid:\033[0m', sender_error_msg)
         ...
 
     # Проверка получателя
     recipient_valid, recipient_error_msg = is_valid_email(recipient)
     if not recipient_valid:
-        # print(recipient_error_msg)
+        # print('\033[33mrecipient_valid:\033[0m', recipient_error_msg)
         ...
 
     # Проверка на отправку самому себе.
-
     if not sender_valid or not recipient_valid:
         print(f"Невозможно отправить письмо с адреса {sender} на адрес {recipient}")
         return
@@ -43,7 +42,7 @@ send_email('Это сообщение для проверки связи', 'vasy
 send_email('Вы видите это сообщение как лучший студент курса!', 'urban.fan@mail.ru', sender='urban.info@gmail.com')
 send_email('Пожалуйста, исправьте задание', 'urban.student@mail.ru', sender='urban.teacher@mail.uk')
 send_email('Напоминаю самому себе о вебинаре', 'urban.teacher@mail.ru', sender='urban.teacher@mail.ru')
-# send_email('Если @ отсутствует, то письмо не отправится', 'urban.teacher.mail.ru')
+send_email('Если @ отсутствует, то письмо не отправится', 'urban.teacher.mail.ru')
 
 '''
 **Задача "Рассылка писем"**
