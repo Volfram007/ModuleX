@@ -43,9 +43,9 @@ for i in a:
 
 
 def all_variants3(text):
-    for i in range(len(text)):
-        for j in range(len(text) - i):
-            yield text[j:j + i + 1]
+    for t in range(len(text)):
+        for j in range(len(text) - t):
+            yield text[j:j + t + 1]
 
 
 # функцию for, for
