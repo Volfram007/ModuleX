@@ -13,14 +13,14 @@ first_ball = MysticBall('Да', 'Нет', 'Наверное')
 print(first_ball())
 print(first_ball())
 print(first_ball())
-'''** Метод __call__: **'''
+'''** Метод __call__ **'''
 
 first = 'Мама мыла раму'
 second = 'Рамена мало было'
 
 result = list(map(lambda f, s: f == s, first, second))
 print(result)
-'''**Lambda-функция:**'''
+'''** Lambda-функция **'''
 
 
 def get_advanced_writer(file_name):
@@ -35,7 +35,7 @@ def get_advanced_writer(file_name):
 
 write = get_advanced_writer('example.txt')
 write('Это строчка', ['А', 'это', 'уже', 'число', 5, 'в', 'списке'])
-'''**Замыкание:**'''
+'''** Замыкание **'''
 
 '''
 ### Задача "Функциональное разнообразие"
