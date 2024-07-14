@@ -15,6 +15,13 @@ def all_variants(text):
             yield text[start % ln]
 
 
+# функцию for
+print('Через for')
+a = all_variants("abc")
+for i in a:
+    print(i)
+
+
 def all_variants2(text, length=1, step=1):
     # Цикл по всем возможным началам подстроки
     for start in range(len(text) - length + 1):
@@ -28,13 +35,22 @@ def all_variants2(text, length=1, step=1):
             yield _
 
 
-a = all_variants("abc")
-for i in a:
-    print(i)
-
 # рекурсивно вызываем функцию
 print('\nЧерез рекурсию')
 a = all_variants2("abс")
+for i in a:
+    print(i)
+
+
+def all_variants3(text):
+    for i in range(len(text)):
+        for j in range(len(text) - i):
+            yield text[j:j + i + 1]
+
+
+# функцию for, for
+print('\nЧерез for, for')
+a = all_variants3("abc")
 for i in a:
     print(i)
 
