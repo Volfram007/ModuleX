@@ -22,8 +22,6 @@ class WarehouseManager:
             else:
                 print(f"Недостаточно товара {product} для отгрузки {count}")
 
-    # Обрабатываем неизвестный запрос
-
     def run(self, requests):
         # Запускаем менеджера склада
         threads = []
