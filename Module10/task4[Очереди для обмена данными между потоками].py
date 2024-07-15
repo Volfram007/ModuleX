@@ -1,5 +1,5 @@
-from threading import Thread, Lock  # Библиотека для создания потоков
-from time import sleep, time  # Библиотека для определения времени
+from threading import Thread  # Библиотека для создания потоков
+from time import sleep  # Библиотека для определения времени
 from queue import Queue  # Библиотека для создания очереди
 
 
