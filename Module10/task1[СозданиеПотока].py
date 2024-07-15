@@ -1,57 +1,66 @@
-# Задание:
-# Напишите программу, которая создает два потока.
-# Первый поток должен выводить числа от 1 до 10 с интервалом в 1 секунду.
-# Второй поток должен выводить буквы от 'a' до 'j' с тем же интервалом.
-# Оба потока должны работать параллельно.
-
-# import asyncio
-#
-#
-# async def print_numbers():
-#     for number in range(1, 11):
-#         print('\033[32mThread 1: {}'.format(number))
-#         await asyncio.sleep(0.01)
-#
-#
-# async def print_letters():
-#     for letter in 'abcdefghij'.upper():
-#         print('\033[93mThread 2: {}'.format(letter))
-#         await asyncio.sleep(0.01)
-#
-#
-# async def main():
-#     task1 = asyncio.create_task(print_numbers())
-#     task2 = asyncio.create_task(print_letters())
-#
-#     # Ждем завершения обоих потоков
-#     await task1
-#     await task2
-#     # await asyncio.gather(task1, task2)
-#
-#
-# asyncio.run(main())
-
-import time
+from time import sleep, time
 from threading import Thread
 
 
-def print_numbers():
-    for number in range(1, 11):
-        print(f'\033[32mThread 1: {number}')
-        time.sleep(1)
+def write_words(word_count, file_name):
+    with open(file_name, 'w', encoding='utf-8') as f:
+        for i in range(1, word_count + 1):
+            f.write(f"Какое-то слово № {i}\n")
+            sleep(0.1)
+    print(f"Завершилась запись в файл {file_name}")
 
 
-def print_letters():
-    for letter in 'abcdefghij':
-        print(f'\033[33mThread 2: {letter}')
-        time.sleep(1)
+start_time = time()
 
+write_words(10, 'Test/example1.txt')
+write_words(30, 'Test/example2.txt')
+write_words(200, 'Test/example3.txt')
+write_words(100, 'Test/example4.txt')
 
-thread1 = Thread(target=print_numbers)
-thread2 = Thread(target=print_letters)
+end_time = time()
+print(f"Работа функций: {end_time - start_time}")
 
-thread1.start()
-thread2.start()
+start_time = time()
 
-thread1.join()
-thread2.join()
+threads = [
+    Thread(target=write_words, args=(10, 'Test/example5.txt')),
+    Thread(target=write_words, args=(30, 'Test/example6.txt')),
+    Thread(target=write_words, args=(200, 'Test/example7.txt')),
+    Thread(target=write_words, args=(100, 'Test/example8.txt')),
+]
+
+for thread in threads:
+    thread.start()
+
+for thread in threads:
+    thread.join()
+
+end_time = time()
+print(f"Работа потоков: {end_time - start_time}")
+
+# ### Задача "Потоковая запись в файлы"
+# Создать функцию для записи слов в файл с паузами и измерить время выполнения этой функции как в однопоточном,
+# так и в многопоточном режиме.
+#
+# **Задание:**
+# 1. Напишите функцию `write_words(word_count, file_name)`, которая:
+#     - принимает `word_count` (количество записываемых слов) и `file_name` (название файла).
+#     - Записывает слова "Какое-то слово № <номер слова по порядку>" в файл.
+#     - Делает паузу 0.1 секунды после записи каждого слова (используйте `sleep` из модуля `time`).
+#     - По завершении записи выводит "Завершилась запись в файл <название файла>".
+# 2. Вызовите функцию `write_words` 4 раза с параметрами:
+#     - 10, `example1.txt`
+#     - 30, `example2.txt`
+#     - 200, `example3.txt`
+#     - 100, `example4.txt`
+# 3. Создайте 4 потока для вызова этой функции с параметрами:
+#     - 10, `example5.txt`
+#     - 30, `example6.txt`
+#     - 200, `example7.txt`
+#     - 100, `example8.txt`
+# 4. Запустите потоки методом `start`, остановите основной поток методом `join`.
+# 5. Измерьте и выведите время, затраченное на выполнение функций и потоков.
+#
+# **Примечания:**
+# - Ожидаемое время выполнения функций не должно превышать 34 секунды, а потоков — 20 секунд.
+# - Потоки работают почти одновременно, поэтому завершение записи в файлы может происходить в разном порядке.
