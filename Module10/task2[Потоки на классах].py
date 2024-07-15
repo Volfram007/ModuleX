@@ -1,51 +1,60 @@
-# 1. Необходимо написать программу с использованием механизмов многопоточности.
-# 2. Программа должна создавать два потока-рыцаря.
-# 3. Каждый рыцарь должен иметь имя и умение.
-# 4. Умение рыцаря определяет время, необходимое для выполнения защитной миссии.
-# 5. Враги будут нападать в количестве 100 человек.
-# 6. Каждый день рыцарь может ослабить вражеское войско на определенное количество человек, равное его умению.
-# 7. Если у рыцаря умение равно 20, то он будет защищать крепость в течение 5 дней (5 секунд в программе).
-# 8. Чем выше умение рыцаря, тем быстрее он сможет защитить королевство.
-
-import time
+from time import sleep
 from threading import Thread
 
 
-class Knight:
-    name = ''
-    skill = 0
-    color = '0'
-
-    def __init__(self, name, skill, color=0):
+class Knight(Thread):
+    def __init__(self, name, power, color=0):
+        super().__init__()
         self.name = name
-        self.skill = skill
+        self.power = power
         self.color = color
 
+    def run(self):
+        colored_name = f"\033[{self.color}m{self.name}\033[0m"
+        enemies = 100
+        days = 0
+        while enemies > 0:
+            sleep(1)
+            days += 1
+            enemies -= self.power
+            print(f"{colored_name} сражается {days} день(дня)..., осталось {enemies} воинов.")
+        print(f"{colored_name} одержал победу спустя {days} дней(дня)!")
+
     def __str__(self):
-        return f'\033[0mИмя:\033[93m{self.name}\033[0m \tУмение:\033[91m{self.skill}'
-
-
-def Fortress(count, knight):
-    for attack in range(round(count / knight.skill)):
-        print(
-            f'\033[97m{knight.name}\033[{knight.color}m'
-            f', сражается день {attack + 1}.\tОсталось {count - (attack + 1) * knight.skill} воинов.')
-        time.sleep(1)
-    print(f'\033[91m{knight.name} Победил всех!')
+        return f'\033[0mИмя:\033[93m{self.name}\033[0m \tУмение:\033[91m{self.power}'
 
 
 sir = Knight('Lancelot', 20, 94)
 sir2 = Knight('Galahad', 10, 93)
-
-thread1 = Thread(target=Fortress, args=(100, sir))
-thread2 = Thread(target=Fortress, args=(100, sir2))
 
 print(sir)
 print(sir2)
 
 print(f'\tНа нас напали!'.upper())
 
-thread1.start()
-thread2.start()
-thread1.join()
-thread2.join()
+sir.start()
+sir2.start()
+sir.join()
+sir2.join()
+
+# ### Задача "За честь и отвагу!"
+# Создайте класс `Knight`, наследованный от `Thread`, с атрибутами `name` (имя рыцаря, тип `str`)
+# и `power` (сила рыцаря, тип `int`).
+#
+# Реализуйте метод `run`, в котором:
+# - При запуске потока выводится "<Имя рыцаря>, на нас напали!".
+# - Рыцарь сражается до победы над всеми врагами (100 для всех потоков).
+# - Количество врагов уменьшается на `power` рыцаря.
+# - Каждый день сражения (1 секунда) выводится
+# "<Имя рыцаря> сражается <кол-во дней>..., осталось <кол-во воинов> воинов."
+# - После победы выводится "<Имя рыцаря> одержал победу спустя <кол-во дней> дней(дня)!".
+#
+# ### Задание
+# 1. Создайте класс `Knight` с описанными свойствами.
+# 2. Создайте и запустите 2 потока на основе класса `Knight`.
+# 3. Выведите на экран строку об окончании битв.
+#
+# **Примечания:**
+# - Метод `run` класса `Knight` должен корректно обрабатывать бой и выводить соответствующие сообщения.
+# - Для создания задержки используйте `sleep` из модуля `time`.
+# - Окончание битв выводится после завершения всех потоков.
