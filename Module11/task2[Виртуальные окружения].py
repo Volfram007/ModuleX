@@ -8,4 +8,5 @@ venv/Scripts/activate
 Обновляем pip
 python.exe -m pip install --upgrade pip
 
+pip freeze > requirements.txt
 """
