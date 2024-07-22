@@ -1,5 +1,5 @@
 import unittest
-import runner_and_tournament as tournament
+from taskFiles import runner_and_tournament as tournament
 
 
 class TournamentTest(unittest.TestCase):
