@@ -1,5 +1,5 @@
 import unittest
-import runner as run_
+from taskFiles import runner as run_
 
 
 class RunnerTest(unittest.TestCase):
@@ -27,6 +27,7 @@ class RunnerTest(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
+# Задача "Проверка на выносливость"
 # Создайте класс RunnerTest, наследуемый от TestCase из модуля unittest.
 # Напишите следующие методы в классе RunnerTest:
 # test_walk: создайте объект класса Runner, вызовите метод walk 10 раз,
