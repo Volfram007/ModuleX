@@ -1,5 +1,5 @@
 import unittest
-import runner_and_tournament as runner
+import runner_and_tournament as tournament
 
 
 class TournamentTest(unittest.TestCase):
@@ -8,9 +8,9 @@ class TournamentTest(unittest.TestCase):
         cls.all_results = []
 
     def setUp(self):
-        self.runner1 = runner.Runner('Усэйн', 10)
-        self.runner2 = runner.Runner('Андрей', 9)
-        self.runner3 = runner.Runner('Ник', 3)
+        self.runner1 = tournament.Runner('Усэйн', 10)
+        self.runner2 = tournament.Runner('Андрей', 9)
+        self.runner3 = tournament.Runner('Ник', 3)
 
     @classmethod
     def tearDownClass(cls):
@@ -18,7 +18,7 @@ class TournamentTest(unittest.TestCase):
             print({place: runner.name for place, runner in i.items()})
 
     def test_Tournament1(self):
-        t = runner.Tournament(90, self.runner1, self.runner3)
+        t = tournament.Tournament(90, self.runner1, self.runner3)
         result = t.start()
         TournamentTest.all_results.append(result)
         # Проверка наличия в списке items результатов последнего слова "Ник"
@@ -27,14 +27,14 @@ class TournamentTest(unittest.TestCase):
         self.assertTrue(res, f"Получен: {next(reversed(result.values()))}")
 
     def test_Tournament2(self):
-        t = runner.Tournament(90, self.runner2, self.runner3)
+        t = tournament.Tournament(90, self.runner2, self.runner3)
         result = t.start()
         TournamentTest.all_results.append(result)
         res = "Ник" == next(reversed(result.values()))
         self.assertTrue(res, f"Получен: {next(reversed(result.values()))}")
 
     def test_Tournament3(self):
-        t = runner.Tournament(90, self.runner1, self.runner2, self.runner3)
+        t = tournament.Tournament(90, self.runner1, self.runner2, self.runner3)
         result = t.start()
         TournamentTest.all_results.append(result)
         res = "Ник" == next(reversed(result.values()))
