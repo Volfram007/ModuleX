@@ -18,7 +18,7 @@ class RunnerTest(unittest.TestCase):
     @unittest.skipIf(is_frozen, 'Тесты в этом кейсе заморожены')
     def test_walk(self):
         try:
-            runner = rt.Runner("Name1",-5)
+            runner = rt.Runner("Name1", -5)
             for _ in range(10):
                 runner.walk()
             self.assertEqual(runner.distance, 50)
