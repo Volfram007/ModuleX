@@ -42,7 +42,6 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
 @router.message(UserStates.gender)
 async def chat(message: Message, state: FSMContext) -> None:
     if message.text.lower() not in ["м", "ж"]:
-        data = await state.get_data()
         await message.answer(f"Введите правильный пол!")
         return
 
@@ -119,7 +118,6 @@ async def process_yes(message: Message, state: FSMContext) -> None:
 
 @router.message(UserStates.result, F.text.casefold() == "нет")
 async def process_no(message: Message, state: FSMContext) -> None:
-    data = await state.get_data()  # Получаем данные из состояний
     await state.clear()  # Очищает данные из состояний
     await message.answer("О-очень жаль :(\nЧто бы продолжить введите /start",
                          reply_markup=ReplyKeyboardRemove())
