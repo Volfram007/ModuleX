@@ -151,8 +151,6 @@ async def set_weight(message: Message, state: FSMContext) -> None:
 
 @router.message(UserStates.result, F.text.casefold() == "да")
 async def select_yes(message: Message, state: FSMContext) -> None:
-    # data = await state.update_data(result=message.text)
-    # print('select_yes')
     await set_id(state, message)
     data = await state.get_data()
     await delete_messages(bot, [mess for mess in data["bot_mess"]], state)
@@ -217,7 +215,7 @@ async def cmd_all(message: Message, state: FSMContext) -> None:
         bot_mess = await message.answer(f"Какой Ваш пол: М или Ж ?",
                                         reply_markup=ReplyKeyboardRemove())
         await set_id(state, message, bot_mess)
-    else:
+    elif UserStates:
         bot_mess = await message.answer("Начните с команды /start",
                                         reply_markup=ReplyKeyboardRemove())
         await set_id(state, message, bot_mess)
