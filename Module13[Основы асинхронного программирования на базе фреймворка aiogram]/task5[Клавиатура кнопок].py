@@ -74,11 +74,6 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
     """
     await state.set_state(None)
     await state.update_data(name=message.from_user.full_name)  # Сохраняем имя пользователя
-    # Отправляем сообщение с командами
-    # bot_mess = await message.answer(f"Команды:\n"
-    #                                 f"Calories- расчета калорий для оптимального похудения или "
-    #                                 f"сохранения нормального веса",
-    #                                 reply_markup=ReplyKeyboardRemove())
     bot_mess = await message.answer(
         f"Привет, {message.from_user.full_name}!",
         reply_markup=ReplyKeyboardMarkup(
