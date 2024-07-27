@@ -72,6 +72,7 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
     """
     Обработчик команды /start
     """
+    await state.set_state(None)  # Обнуляем состояние
     await state.update_data(name=message.from_user.full_name)  # Сохраняем имя пользователя
     # Отправляем сообщение с командами
     bot_mess = await message.answer(f"Команды:\n"
@@ -183,9 +184,9 @@ async def select_yes(message: Message, state: FSMContext) -> None:
     growth = data["growth"]
     weight = data["weight"]
     if gender == "м":
-        bmr = 10 * float(data['weight']) + 6.25 * float(data['growth']) - 5 * float(data['age']) + 5
+        bmr = (10 * float(data['weight'])) + (6.25 * float(data['growth'])) - (5 * float(data['age'])) + 5
     else:
-        bmr = 10 * float(data['weight']) + 6.25 * float(data['growth']) - 5 * float(data['age']) - 161
+        bmr = (10 * float(data['weight'])) + (6.25 * float(data['growth'])) - (5 * float(data['age'])) - 161
 
     result_text = (
         f"{name}, согласно вашим данным:\n"
