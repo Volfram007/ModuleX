@@ -190,10 +190,10 @@ async def select_yes(message: Message, state: FSMContext) -> None:
     result_text = (
         f"{name}, согласно вашим данным:\n"
         f"```Параметры:\n"
-        f"**Пол**: {gender.upper()}\n"
-        f"**Возраст**: {age} лет\n"
-        f"**Рост**: {growth} см\n"
-        f"**Вес**: {weight} кг\n```"
+        f"Пол: {gender.upper()}\n"
+        f"Возраст: {age} лет\n"
+        f"Рост: {growth} см\n"
+        f"Вес: {weight} кг\n```"
     )
     result_text += f"\n*Отлично! Ваша норма калорий: {round(bmr, 3)} ккал*\nЧто бы продолжить введите /start"
 
