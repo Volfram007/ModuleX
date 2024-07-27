@@ -1,19 +1,20 @@
+from Config.token import TG_TOKEN  # Импорт токена
 from aiogram import Bot, Dispatcher, F, Router
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+
 from aiogram.types import (
     KeyboardButton,
     Message,
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
 )
-from Config.token import TG_TOKEN  # Импорт токена
 import asyncio
 
-TOKEN = TG_TOKEN
+bot = Bot(token=TG_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 router = Router()
 
 
@@ -24,57 +25,116 @@ class UserStates(StatesGroup):  # Создание состояний
     growth = State()  # Рост
     weight = State()  # Вес
     result = State()  # Результат
+    bot_mess = State()
 
 
-async def delete_messages(bot: Bot, messages: list):
+async def set_id(state: FSMContext, message: Message, bob_mess: Message = None, ) -> bool:
+    data = await state.get_data()
+    mess = list(data.get('bot_mess', []))  # Получаем список сообщений или создаём пустой
+    # Собираем id сообщений для удаления
+    if bob_mess is not None:
+        mess.append({'chat_id': bob_mess.chat.id, 'message_id': bob_mess.message_id})
+    mess.append({'chat_id': message.chat.id, 'message_id': message.message_id})
+    # Фи-и
+    # mess += [{'chat_id': message.chat.id,
+    #           'message_id': message.message_id}] + ([{'chat_id': bob_mess.chat.id,
+    #                                                   'message_id': bob_mess.message_id}] if bob_mess else [])
+    # Обновляем список сообщений
+    await state.update_data(bot_mess=mess)
+    # print('set_id', mess)
+    return True
+
+
+async def delete_messages(bot_: Bot, messages: list, state: FSMContext) -> bool:
+    data = await state.get_data()
+    # print('>>>', messages)
     for msg in messages:
-        await bot.delete_message(chat_id=msg.chat.id, message_id=msg.message_id)
+        try:
+            # print('del', msg)
+            await bot.delete_message(chat_id=msg['chat_id'], message_id=msg['message_id'])
+        except Exception as e:
+            print(f"Ошибка при удалении сообщения: {e}")
+    data["bot_mess"].clear()  # Удаление ссылки на сообщение
+    await state.update_data(data)
+    return True
 
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext) -> None:
     await state.update_data(name=message.from_user.full_name)
-    await state.set_state(UserStates.gender)
-    await message.answer(f"Какой Ваш пол: М или Ж ?",
-                         reply_markup=ReplyKeyboardRemove())
+    # await state.set_state(UserStates.gender)
+    bot_mess = await message.answer(f"Команды:\nCalories",
+                                    reply_markup=ReplyKeyboardRemove())
+    await set_id(state, bot_mess)
 
 
 @router.message(UserStates.gender)
-async def chat(message: Message, state: FSMContext) -> None:
+async def set_gender(message: Message, state: FSMContext) -> None:
     if message.text.lower() not in ["м", "ж"]:
-        await message.answer(f"Введите правильный пол!")
+        bot_mess = await message.answer(f"Введите правильный пол!")
+        await set_id(state, message, bot_mess)
         return
+    await set_id(state, message)
+    data = await state.get_data()
+    await delete_messages(bot, [mess for mess in data["bot_mess"]], state)  # Удаление сообщений
 
     await state.update_data(gender=message.text)
     await state.set_state(UserStates.age)
-    await message.answer("Какой Ваш возраст?",
-                         reply_markup=ReplyKeyboardRemove(),
-                         )
+    bot_mess = await message.answer("Какой Вам лет?",
+                                    reply_markup=ReplyKeyboardRemove(),
+                                    )
+    await set_id(state, message, bot_mess)
 
 
 @router.message(UserStates.age)
-async def chat(message: Message, state: FSMContext) -> None:
+async def set_age(message: Message, state: FSMContext) -> None:
+    if not message.text.isdigit():
+        bot_mess = await message.answer(f"Ошибка ввода!")
+        await set_id(state, message, bot_mess)
+        return
+    await set_id(state, message)
+    data = await state.get_data()
+    await delete_messages(bot, [mess for mess in data["bot_mess"]], state)
+
     await state.update_data(age=message.text)
     await state.set_state(UserStates.growth)
-    await message.answer("Какой Ваш рост?",
-                         reply_markup=ReplyKeyboardRemove(),
-                         )
+    bot_mess = await message.answer("Какой Ваш рост?",
+                                    reply_markup=ReplyKeyboardRemove(),
+                                    )
+    await set_id(state, message, bot_mess)
 
 
 @router.message(UserStates.growth)
-async def chat(message: Message, state: FSMContext) -> None:
+async def set_growth(message: Message, state: FSMContext) -> None:
+    if not message.text.isdigit():
+        bot_mess = await message.answer(f"Ошибка ввода!")
+        await set_id(state, message, bot_mess)
+        return
+    await set_id(state, message)
+    data = await state.get_data()
+    await delete_messages(bot, [mess for mess in data["bot_mess"]], state)
+
     await state.update_data(growth=message.text)
     await state.set_state(UserStates.weight)
-    await message.answer("Какой Ваш вес?",
-                         reply_markup=ReplyKeyboardRemove(),
-                         )
+    bot_mess = await message.answer("Какой Ваш вес?",
+                                    reply_markup=ReplyKeyboardRemove(),
+                                    )
+    await set_id(state, message, bot_mess)
 
 
 @router.message(UserStates.weight)
-async def chat(message: Message, state: FSMContext) -> None:
+async def set_weight(message: Message, state: FSMContext) -> None:
+    if not message.text.isdigit():
+        bot_mess = await message.answer(f"Ошибка ввода!")
+        await set_id(state, message, bot_mess)
+        return
+    await set_id(state, message)
+    data = await state.get_data()
+    await delete_messages(bot, [mess for mess in data["bot_mess"]], state)
+
     await state.update_data(weight=message.text)
     await state.set_state(UserStates.result)
-    await message.answer(
+    bot_mess = await message.answer(
         f"И так.\nхотите узнать результат?",
         reply_markup=ReplyKeyboardMarkup(
             keyboard=[
@@ -86,12 +146,17 @@ async def chat(message: Message, state: FSMContext) -> None:
             resize_keyboard=True,
         ),
     )
+    await set_id(state, bot_mess)
 
 
 @router.message(UserStates.result, F.text.casefold() == "да")
-async def process_yes(message: Message, state: FSMContext) -> None:
-    data = await state.update_data(result=message.text)
-    await state.clear()  # Очищает данные из состояний
+async def select_yes(message: Message, state: FSMContext) -> None:
+    # data = await state.update_data(result=message.text)
+    # print('select_yes')
+    await set_id(state, message)
+    data = await state.get_data()
+    await delete_messages(bot, [mess for mess in data["bot_mess"]], state)
+    await state.clear()  # Очищает данные состояния диалога
 
     name = data["name"]
     gender = data["gender"]
@@ -111,20 +176,22 @@ async def process_yes(message: Message, state: FSMContext) -> None:
         f"**Рост**: {growth} см\n"
         f"**Вес**: {weight} кг\n```"
     )
-    result_text += f"\n*Отлично! Вот ваш результат: {round(bmr, 3)} ккал*"
+    result_text += f"\n*Отлично! Ваша норма калорий: {round(bmr, 3)} ккал*\nЧто бы продолжить введите /start"
 
     await message.answer(text=result_text, reply_markup=ReplyKeyboardRemove(), parse_mode="Markdown")
 
 
 @router.message(UserStates.result, F.text.casefold() == "нет")
-async def process_no(message: Message, state: FSMContext) -> None:
+async def select_no(message: Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    await delete_messages(bot, [mess for mess in data["bot_mess"]], state)
     await state.clear()  # Очищает данные из состояний
-    await message.answer("О-очень жаль :(\nЧто бы продолжить введите /start",
-                         reply_markup=ReplyKeyboardRemove())
+    await message.reply("О-очень жаль :(\nЧто бы продолжить введите /start",
+                        reply_markup=ReplyKeyboardRemove())
 
 
 @router.message(UserStates.result)
-async def process_unknown_write(message: Message) -> None:
+async def process_unknown_write(message: Message, state: FSMContext) -> None:
     await message.reply("Что то пошло не так!",
                         reply_markup=ReplyKeyboardRemove())
     await message.answer(
@@ -139,10 +206,24 @@ async def process_unknown_write(message: Message) -> None:
             resize_keyboard=True,
         ),
     )
+    # await set_id(state, message, bot_mess)
+
+
+@router.message()
+async def cmd_all(message: Message, state: FSMContext) -> None:
+    if message.text.lower().strip() == "calories":
+        await state.update_data(name=message.from_user.full_name)
+        await state.set_state(UserStates.gender)
+        bot_mess = await message.answer(f"Какой Ваш пол: М или Ж ?",
+                                        reply_markup=ReplyKeyboardRemove())
+        await set_id(state, message, bot_mess)
+    else:
+        bot_mess = await message.answer("Начните с команды /start",
+                                        reply_markup=ReplyKeyboardRemove())
+        await set_id(state, message, bot_mess)
 
 
 async def main():
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()  # создание диспетчера
     dp.include_router(router)  # Добавляет роутер в диспетчер
     await dp.start_polling(bot)  # Запуск диспетчера событий
