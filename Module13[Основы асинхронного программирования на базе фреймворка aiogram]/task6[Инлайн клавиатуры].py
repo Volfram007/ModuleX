@@ -238,7 +238,7 @@ async def select_no(message: Message, state: FSMContext) -> None:
 @router.message(UserStates.result)
 async def process_unknown_write(message: Message, state: FSMContext) -> None:
     bot_mess = await message.reply("Что то пошло не так!",
-                                  reply_markup=ReplyKeyboardRemove())
+                                   reply_markup=ReplyKeyboardRemove())
     await set_id(state, bot_mess)
     bot_mess = await message.answer(
         f"Хотите узнать результат?",
