@@ -29,11 +29,11 @@ def create_database(path):
     # Удаляем каждую третью запись
     cursor.execute('DELETE FROM users WHERE id % 3 = 1')
 
-    # Выполнение запроса с условием age != 60
-    cursor.execute('SELECT username, email, age, balance FROM users WHERE age != 60')
-
     # Отправляем изменения в базу данных
     connect.commit()
+
+    # Выполнение запроса с условием age != 60
+    cursor.execute('SELECT username, email, age, balance FROM users WHERE age != 60')
 
     # Получение всех результатов
     users = cursor.fetchall()
