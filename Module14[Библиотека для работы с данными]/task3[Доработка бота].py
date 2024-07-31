@@ -106,7 +106,7 @@ async def buy(message: Message, state: FSMContext) -> None:
             bot_mess = await message.answer_photo(photo=FSInputFile(f'Config/{file_name}.jpg'),
                                                   caption=f'>*Название:* {name}\n'
                                                           f'*Описание*: {info}\n'
-                                                          f'*Цена*: {i* int(price)}',
+                                                          f'*Цена*: {i * int(price)}',
                                                   has_spoiler=True,
                                                   parse_mode=ParseMode.MARKDOWN_V2)
             await set_id(state, bot_mess)
