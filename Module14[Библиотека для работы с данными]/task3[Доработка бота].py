@@ -110,7 +110,7 @@ async def buy(message: Message, state: FSMContext) -> None:
                                                   has_spoiler=True,
                                                   parse_mode=ParseMode.MARKDOWN_V2)
             await set_id(state, bot_mess)
-    btn = [[InlineKeyboardButton(text='Перген', callback_data='ok'),
+    btn = [[InlineKeyboardButton(text='Пурген', callback_data='ok'),
             InlineKeyboardButton(text='Вмазь', callback_data='ok'),
             InlineKeyboardButton(text='СтопТусин', callback_data='ok'),
             InlineKeyboardButton(text='НормаПив', callback_data='ok')]]
