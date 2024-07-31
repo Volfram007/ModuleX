@@ -96,7 +96,7 @@ async def buy(message: Message, state: FSMContext) -> None:
 @router.message(F.text.casefold() == "купить")
 async def buy(message: Message, state: FSMContext) -> None:
     # Разделяем текст на строки и обрабатываем каждую строку
-    for line in db.product.split('\n'):
+    for i, line in enumerate(db.product.split('\n'), start=1):
         # Разделяем строку на столбцы
         columns = line.split(' | ')
         if len(columns) == 4:
@@ -106,7 +106,7 @@ async def buy(message: Message, state: FSMContext) -> None:
             bot_mess = await message.answer_photo(photo=FSInputFile(f'Config/{file_name}.jpg'),
                                                   caption=f'>*Название:* {name}\n'
                                                           f'*Описание*: {info}\n'
-                                                          f'*Цена*: {price}',
+                                                          f'*Цена*: {i* int(price)}',
                                                   has_spoiler=True,
                                                   parse_mode=ParseMode.MARKDOWN_V2)
             await set_id(state, bot_mess)
