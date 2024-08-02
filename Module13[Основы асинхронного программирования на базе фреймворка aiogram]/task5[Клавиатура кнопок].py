@@ -86,6 +86,7 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
             resize_keyboard=True,
         ),
     )
+    await set_id(state, bot_mess)
 
 
 @router.message(UserStates.gender)
@@ -216,7 +217,7 @@ async def select_no(message: Message, state: FSMContext) -> None:
 
 
 @router.message(UserStates.result)
-async def process_unknown_write(message: Message, state: FSMContext) -> None:
+async def process_unknown_write(message: Message) -> None:
     await message.reply("Что то пошло не так!",
                         reply_markup=ReplyKeyboardRemove())
     await message.answer(
@@ -255,7 +256,7 @@ async def cmd_all(message: Message, state: FSMContext) -> None:
                 resize_keyboard=True,
             ),
         )
-        await set_id(state,message,bot_mess)  # Сохраняем идентификатор сообщения
+        await set_id(state, message, bot_mess)  # Сохраняем идентификатор сообщения
     elif UserStates:
         bot_mess = await message.answer("Начните с команды /start",
                                         reply_markup=ReplyKeyboardRemove())
