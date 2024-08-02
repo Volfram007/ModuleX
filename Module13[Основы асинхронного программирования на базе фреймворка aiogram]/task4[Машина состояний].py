@@ -210,7 +210,7 @@ async def select_no(message: Message, state: FSMContext) -> None:
 
 
 @router.message(UserStates.result)
-async def process_unknown_write(message: Message, state: FSMContext) -> None:
+async def process_unknown_write(message: Message) -> None:
     await message.reply("Что то пошло не так!",
                         reply_markup=ReplyKeyboardRemove())
     await message.answer(
