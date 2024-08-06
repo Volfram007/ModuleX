@@ -1,5 +1,6 @@
 ** ЗАВИСИМОСТИ **
-pip install requests beautifulsoup4 matplotlib numpy aiogram
+    pip install requests beautifulsoup4 matplotlib numpy aiogram
+    pip freeze > requirements.txt
 *****
 
 Для настройки виртуального окружения (venv) в PyCharm внутри проекта, следуй этим шагам:
