@@ -56,7 +56,8 @@ async def delete_messages(state: FSMContext) -> None:
     if len(messages) > 0:  # Если есть сообщения, то удаляем их
         for msg in messages:  # Проходим по каждому сообщению
             try:
-                await bot.delete_message(chat_id=msg['chat_id'], message_id=msg['message_id'])  # Удаляем сообщение из чата
+                await bot.delete_message(chat_id=msg['chat_id'],
+                                         message_id=msg['message_id'])  # Удаляем сообщение из чата
             except Exception as e:
                 print(f"Ошибка при удалении сообщения: {e}")
         await state.update_data(data["bot_mess"].clear())  # Обновляем данные / очищаем список ссылок
@@ -112,6 +113,9 @@ async def reg_user(message: Message, state: FSMContext) -> None:
         """
         if not is_userlogin(message.text.strip()):
             await bot_mess('Этот логин занят', None, message=message, state=state)
+            return
+        elif message.text.strip() == '':
+            await bot_mess('Логин не может быть пустым', None, message=message, state=state)
             return
         await state.update_data(StateLogin=message.text.strip())
         await bot_mess('Введите почту', None, message=message, state=state)
