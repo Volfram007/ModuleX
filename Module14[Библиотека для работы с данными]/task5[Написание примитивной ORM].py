@@ -1,7 +1,8 @@
 from Config.token import TG_TOKEN  # Импорт токена бота
 from crud_functions import *
-import logging as log
+import re
 import asyncio
+import logging as log
 from aiogram.enums import ParseMode
 from aiogram import Dispatcher, Bot, Router, F, types
 from aiogram.filters import CommandStart
@@ -99,16 +100,31 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
 @router.message(UserStates.StateRegister)
 async def reg_user(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
-    # Получаем данные пользователя
+    # Обрабатываем ввод данных пользователя
     if 'StateLogin' not in data:
+        # Проверка на корректность логина
+        if not re.match(r"^[a-zA-Z0-9а-яА-Я_-]+$", message.text.strip()):
+            await bot_mess('Спец символы запрещены', None, message=message, state=state)
+            return
+        """
+        is_userlogin не используется так как регистрация по id, но при регистрации других акков
+        должен искать дубликаты логинов
+        """
+        if not is_userlogin(message.text.strip()):
+            await bot_mess('Этот логин занят', None, message=message, state=state)
+            return
         await state.update_data(StateLogin=message.text.strip())
         await bot_mess('Введите почту', None, message=message, state=state)
     elif 'StateMail' not in data:
+        # Проверка на корректность почты
+        # if not re.match(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", message.text.strip()):
+        #     await bot_mess('Адрес почты не корректен', None, message=message, state=state)
+        #     return
         await state.update_data(StateMail=message.text.strip())
         await bot_mess('Введите возраст', None, message=message, state=state)
     elif 'StateAge' not in data:
         if not message.text.strip().isdigit():
-            await bot_mess('Введите возраст', None, message=message, state=state)
+            await bot_mess('Введите возраст в числовом виде', None, message=message, state=state)
             return
         await state.update_data(StateAge=message.text.strip())
         data = await state.get_data()
@@ -128,7 +144,7 @@ async def new_user(message: Message, state: FSMContext) -> None:
         await cmd_start(message, state)
     else:
         # Если пользователь не зарегистрирован
-        await bot_mess('Введите имя', None, message=message, state=state)
+        await bot_mess('Введите логин', None, message=message, state=state)
         await state.set_state(UserStates.StateRegister)
 
 

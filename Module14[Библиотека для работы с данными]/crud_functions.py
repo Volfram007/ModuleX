@@ -18,7 +18,10 @@ Intel Core i5-13600K | 14 ядер, 20 потоков, 5.1 ГГц | 50000 | http
 
 def initiate_db() -> None:
     if os.path.exists(db_path):
+        log.info('Файл БД существует')
         return
+    else:
+        log.info('Создание базы данных')
 
     conn = sql.connect(db_path)
     cursor = conn.cursor()
@@ -39,7 +42,7 @@ def initiate_db() -> None:
             CREATE TABLE Users (
                 id INTEGER PRIMARY KEY,
                 id_user INTEGER NOT NULL,
-                username TEXT NOT NULL,
+                login TEXT NOT NULL,
                 email TEXT NOT NULL,
                 age INTEGER NOT NULL,
                 balance INTEGER NOT NULL
@@ -67,7 +70,7 @@ def get_all_products() -> list:
         cursor.execute('SELECT * FROM Products')
         # Получаем результат запроса
         result = cursor.fetchall()
-        log.warning(result)
+
         return result
     except sql.Error as e:
         log.critical(f"sqlError: {e}")
@@ -79,18 +82,41 @@ def get_all_products() -> list:
         conn.close()
 
 
-def add_user(user_id, username, email, age) -> bool:
+def is_userlogin(login) -> bool:
     conn = sql.connect(db_path)
     cursor = conn.cursor()
     try:
-        cursor.execute('''INSERT INTO Users (id_user, username, email, age, balance)
+        cursor.execute("SELECT COUNT(*) FROM Users WHERE username=?", (login,))
+        users = cursor.fetchone()[0]
+        if users > 0:
+            return True # Если пользователь существует
+        else:
+            return False # Если пользователь не существует
+    except sql.Error as e:
+        log.critical(f"sqlError: {e}")
+        return False
+    except Exception as e:
+        log.critical(f"Ошибка: {e}")
+        return False
+    finally:
+        conn.close()
+
+
+def add_user(user_id, login, email, age) -> bool:
+    conn = sql.connect(db_path)
+    cursor = conn.cursor()
+    try:
+
+        cursor.execute('''INSERT INTO Users (id_user, login, email, age, balance)
          VALUES (?, ?, ?, ?, ?)
-         ''', (user_id, username, email, age, 100_000))
+         ''', (user_id, login, email, age, 150_000))
         conn.commit()
     except sql.Error as e:
         log.critical(f"sqlError: {e}")
+        return False
     except Exception as e:
         log.critical(f"Ошибка: {e}")
+        return False
     finally:
         conn.close()  # Закрываем соединение с базой данных в любом случае
     return True
