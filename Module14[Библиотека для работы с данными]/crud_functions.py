@@ -82,16 +82,36 @@ def get_all_products() -> list:
         conn.close()
 
 
-def is_userlogin(login) -> bool:
+def is_validlogin(login) -> bool:
     conn = sql.connect(db_path)
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT COUNT(*) FROM Users WHERE username=?", (login,))
+        cursor.execute("SELECT COUNT(*) FROM Users WHERE login=?", (login,))
         users = cursor.fetchone()[0]
         if users > 0:
-            return True # Если пользователь существует
+            return True  # Если пользователь существует
         else:
-            return False # Если пользователь не существует
+            return False  # Если пользователь не существует
+    except sql.Error as e:
+        log.critical(f"sqlError: {e}")
+        return False
+    except Exception as e:
+        log.critical(f"Ошибка: {e}")
+        return False
+    finally:
+        conn.close()
+
+
+def is_validmail(email) -> bool:
+    conn = sql.connect(db_path)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT COUNT(*) FROM Users WHERE mail=?", (email,))
+        users = cursor.fetchone()[0]
+        if users > 0:
+            return True  # Если почта существует
+        else:
+            return False  # Если почта не существует
     except sql.Error as e:
         log.critical(f"sqlError: {e}")
         return False
@@ -106,7 +126,6 @@ def add_user(user_id, login, email, age) -> bool:
     conn = sql.connect(db_path)
     cursor = conn.cursor()
     try:
-
         cursor.execute('''INSERT INTO Users (id_user, login, email, age, balance)
          VALUES (?, ?, ?, ?, ?)
          ''', (user_id, login, email, age, 150_000))

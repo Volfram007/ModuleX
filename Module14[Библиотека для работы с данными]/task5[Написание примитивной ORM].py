@@ -107,11 +107,7 @@ async def reg_user(message: Message, state: FSMContext) -> None:
         if not re.match(r"^[a-zA-Z0-9а-яА-Я_-]+$", message.text.strip()):
             await bot_mess('Спец символы запрещены', None, message=message, state=state)
             return
-        """
-        is_userlogin не используется так как регистрация по id, но при регистрации других акков
-        должен искать дубликаты логинов
-        """
-        if not is_userlogin(message.text.strip()):
+        elif is_validlogin(message.text.strip()):
             await bot_mess('Этот логин занят', None, message=message, state=state)
             return
         elif message.text.strip() == '':
@@ -120,6 +116,9 @@ async def reg_user(message: Message, state: FSMContext) -> None:
         await state.update_data(StateLogin=message.text.strip())
         await bot_mess('Введите почту', None, message=message, state=state)
     elif 'StateMail' not in data:
+        if is_validlogin(message.text.strip()):
+            await bot_mess('Эта почта занята', None, message=message, state=state)
+            return
         # Проверка на корректность почты
         # if not re.match(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", message.text.strip()):
         #     await bot_mess('Адрес почты не корректен', None, message=message, state=state)
