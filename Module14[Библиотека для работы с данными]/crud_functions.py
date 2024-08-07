@@ -102,7 +102,7 @@ def is_validlogin(login) -> bool:
         conn.close()
 
 
-def is_validmail(email) -> bool:
+def is_validemail(email) -> bool:
     conn = sql.connect(db_path)
     cursor = conn.cursor()
     try:

@@ -116,7 +116,7 @@ async def reg_user(message: Message, state: FSMContext) -> None:
         await state.update_data(StateLogin=message.text.strip())
         await bot_mess('Введите почту', None, message=message, state=state)
     elif 'StateMail' not in data:
-        if is_validlogin(message.text.strip()):
+        if is_validemail(message.text.strip()):
             await bot_mess('Эта почта занята', None, message=message, state=state)
             return
         # Проверка на корректность почты
