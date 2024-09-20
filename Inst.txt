@@ -1,6 +1,6 @@
 ** ЗАВИСИМОСТИ **
     pip install --upgrade pip
-    pip install sqlalchemy uvicorn fastapi aiogram Jinja2
+    pip install sqlalchemy uvicorn fastapi aiogram Jinja2 scikit-learn
     pip freeze > requirements.txt
 *****************
 
