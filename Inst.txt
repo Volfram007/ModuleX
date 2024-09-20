@@ -1,0 +1,5 @@
+** ЗАВИСИМОСТИ **
+    pip install --upgrade pip
+    pip install uvicorn fastapi aiogram Jinja2
+    pip freeze > requirements.txt
+*****************
