@@ -1,5 +1,17 @@
 ** ЗАВИСИМОСТИ **
     pip install --upgrade pip
-    pip install uvicorn fastapi aiogram Jinja2
+    pip install sqlalchemy uvicorn fastapi aiogram Jinja2
     pip freeze > requirements.txt
 *****************
+
+Чтобы установить пакеты из файла `requirements.txt` в виртуальное окружение, выполните следующие шаги:
+**Установка пакетов из `requirements.txt`:**
+   pip install -r requirements.txt
+
+Чтобы удалить все установленные библиотеки, можно выполнить следующие шаги:
+1. Получите список всех установленных пакетов:
+    pip freeze > requirements.txt
+2. Удалите все пакеты, используя полученный список:
+    pip uninstall -r requirements.txt -y
+3. Удалите файл `requirements.txt`, если он больше не нужен:
+    rm requirements.txt
