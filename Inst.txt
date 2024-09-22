@@ -1,6 +1,6 @@
 ** ЗАВИСИМОСТИ **
-    pip install --upgrade pip
-    pip install sqlalchemy uvicorn fastapi aiogram Jinja2 scikit-learn
+    pip install --upgrade pip &*& python.exe -m pip install --upgrade pip
+    pip install python-slugify alembic sqlalchemy uvicorn fastapi aiogram Jinja2 scikit-learn httpx
     pip freeze > requirements.txt
 *****************
 
