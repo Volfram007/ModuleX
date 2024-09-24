@@ -1,7 +1,17 @@
 ** ЗАВИСИМОСТИ **
     pip install --upgrade pip &*& python.exe -m pip install --upgrade pip
-    pip install python-slugify alembic sqlalchemy uvicorn fastapi aiogram Jinja2 scikit-learn httpx
+    pip install django python-slugify alembic sqlalchemy uvicorn fastapi aiogram Jinja2 scikit-learn httpx
     pip freeze > requirements.txt
+*****************
+
+** Django cmd **
+django-admin startproject Module18
+cmd для запуска сервера из каталога проекта:
+    python manage.py runserver
+cmd для создания приложения:
+    python manage.py startapp task1
+Создание скрипта для запуска:
+
 *****************
 
 Чтобы установить пакеты из файла `requirements.txt` в виртуальное окружение, выполните следующие шаги:
