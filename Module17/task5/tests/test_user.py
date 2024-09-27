@@ -1,3 +1,4 @@
+# Запуск по: pytest Module17/task5/tests/test_user.py
 from fastapi.testclient import TestClient
 from Module17.task5.main import app
 import pytest
@@ -49,6 +50,19 @@ def test_create_users(user_data):
     assert response.status_code == 200
     # Проверка, что транзакция успешна
     assert response.json() == {"status_code": 201, "transaction": "Successful"}
+
+
+def test_get_users():
+    # Отправка GET-запроса для создания пользователя
+    response = client.get("/user/user_id?id=3")
+    # Проверка, что статус код 200
+    assert response.status_code == 200
+    # Проверка, что транзакция успешна
+    data = response.json()
+    # Проверка структуры ответа
+    assert data["status_code"] == 200
+    assert data["transaction"] == "Successful"
+    assert data["user"]["id"] == 3
 
 
 # Тестовые данные для обновления пользователя
@@ -132,16 +146,19 @@ list_tasks = [
     {"title": "FourthTask", "content": "Content4", "priority": 6, "user_id": 3}
 ]
 
+
 # Тестовые данные для создания нескольких задач
 @pytest.mark.parametrize("task_data", list_tasks)
 def test_create_tasks_for_users(task_data):
     response = client.post(f"/task/create", params={"id": task_data['user_id']}, json=task_data)
     assert response.json() == {"status_code": 201, "transaction": "Successful"}
 
+
 # Удаление задачи
 def test_delete_task():
     response = client.delete("/task/delete", params={"id": 3})
     assert response.status_code == 200
+
 
 # Тестовое удаление пользователя и его задач
 def test_delete_user_with_tasks():
@@ -165,4 +182,4 @@ def test_delete_user_with_tasks():
 #     assert response.status_code == 200
 #     assert response.json() == {"status_code": 200, "transaction": "Task update is successful!"}
 
-# Запуск по: pytest Module17/task5/tests/test_user.py
+

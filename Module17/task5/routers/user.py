@@ -13,7 +13,7 @@ router = APIRouter(prefix="/user", tags=["user"])
 # Получение всех пользователей
 @router.get("/")
 def all_users(db: Annotated[Session, Depends(get_db)]):
-    users = db.scalars(select(User)).all().first()
+    users = db.scalars(select(User)).all()
     return users
 
 
@@ -22,7 +22,7 @@ def all_users(db: Annotated[Session, Depends(get_db)]):
 def get_user(db: Annotated[Session, Depends(get_db)], id: int):
     user = db.scalar(select(User).where(User.id == id))
     if user is not None:
-        return user
+        return {'status_code': status.HTTP_200_OK, 'transaction': 'Successful', 'user': user}
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User was not found')
 
