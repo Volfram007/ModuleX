@@ -9,20 +9,23 @@ from slugify import slugify
 
 router = APIRouter(prefix="/user", tags=["user"])
 
+
 # Получение всех пользователей
 @router.get("/")
 def all_users(db: Annotated[Session, Depends(get_db)]):
-    users = db.scalars(select(User)).all()
+    users = db.scalars(select(User)).all().first()
     return users
+
 
 # Получение пользователя по id
 @router.get("/user_id")
 def get_user(db: Annotated[Session, Depends(get_db)], id: int):
-    user = db.scalars(select(User).where(User.id == id))
+    user = db.scalar(select(User).where(User.id == id))
     if user is not None:
         return user
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User was not found')
+
 
 # Создание пользователя
 @router.post("/create")
@@ -40,6 +43,7 @@ def create_user(db: Annotated[Session, Depends(get_db)], create_user: CreateUser
     db.commit()
     return {'status_code': status.HTTP_201_CREATED, 'transaction': 'Successful'}
 
+
 # Обновление переменных пользователя по id
 @router.put("/update")
 def update_user(db: Annotated[Session, Depends(get_db)], update_user: UpdateUser, id: int):
@@ -53,6 +57,7 @@ def update_user(db: Annotated[Session, Depends(get_db)], update_user: UpdateUser
         age=update_user.age))
     db.commit()
     return {'status_code': status.HTTP_200_OK, 'transaction': 'User update is successful!'}
+
 
 # Удаление пользователя по id
 @router.delete("/delete")
@@ -69,6 +74,7 @@ def delete_user(db: Annotated[Session, Depends(get_db)], id: int):
     db.commit()
     return {'status_code': status.HTTP_200_OK, 'transaction': 'User delete is successful!'}
 
+
 # Удаление всех пользователей из базы данных
 @router.delete("/deleteAllUsers")
 def delete_all_users(db: Annotated[Session, Depends(get_db)]):
@@ -81,6 +87,7 @@ def delete_all_users(db: Annotated[Session, Depends(get_db)]):
         return {'status_code': status.HTTP_200_OK, 'transaction': 'All users deleted!'}
     else:  # Если список пользователей пуст
         return {'status_code': status.HTTP_200_OK, 'transaction': 'No users to delete'}
+
 
 # Получение всех задач пользователя по id
 @router.get("/user_id/tasks")

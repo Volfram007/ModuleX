@@ -6,6 +6,7 @@ from Module17.task4.backend.db_depends import get_db
 from typing import Annotated
 from sqlalchemy import insert, select, update, delete
 from slugify import slugify
+
 router = APIRouter(prefix="/user", tags=["user"])
 
 
@@ -19,9 +20,9 @@ def all_users(db: Annotated[Session, Depends(get_db)]):
 @router.get("/user_id")
 def get_user(db: Annotated[Session, Depends(get_db)], id: int):
     # Получение пользователя по id
-    user = db.scalars(select(User).where(User.id == id))
+    user = db.scalar(select(User).where(User.id == id))
     if user is not None:
-        return user
+        return {'status_code': status.HTTP_200_OK, 'transaction': 'Successful', 'user': user}
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User was not found')
 

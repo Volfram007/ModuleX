@@ -1,3 +1,4 @@
+# Запуск по: pytest Module17/task4/tests/test_user.py
 from fastapi.testclient import TestClient
 from Module17.task4.main import app
 import pytest
@@ -36,6 +37,19 @@ def test_create_users(user_data):
     assert response.status_code == 200
     # Проверка, что транзакция успешна
     assert response.json() == {"status_code": 201, "transaction": "Successful"}
+
+
+def test_get_users():
+    # Отправка GET-запроса для создания пользователя
+    response = client.get("/user/user_id?id=3")
+    # Проверка, что статус код 200
+    assert response.status_code == 200
+    # Проверка, что транзакция успешна
+    data = response.json()
+    # Проверка структуры ответа
+    assert data["status_code"] == 200
+    assert data["transaction"] == "Successful"
+    assert data["user"]["id"] == 3
 
 
 def test_update_user():
@@ -98,5 +112,3 @@ def test_delete_non_existent_user():
     assert response.status_code == 404
     # Проверка текста ошибки
     assert response.json() == {"detail": "User was not found"}
-
-# Запуск по: pytest Module17/task4/tests/test_user.py
