@@ -8,14 +8,12 @@ client = TestClient(app)
 
 
 # Удаляем всех пользователей
-def test_delete_all_users():
-    response = client.delete("/user/deleteAllUsers")
-
+def test_delete_all():
+    response = client.delete("/user/deleteAll")
+    data = response.json()
     assert response.status_code == 200
-    if response.json() == {"transaction": "All users deleted"}:
-        assert response.json() == {"transaction": "All users deleted"}
-    elif response.json() == {"transaction": "No users to delete"}:
-        assert response.json() == {"transaction": "No users to delete"}
+    if data['transaction'] not in ("All users and tasks deleted!", "No users and tasks to delete"):
+        assert False, f"{data}"
 
 
 # Тестовые данные для создания нескольких пользователей
@@ -46,23 +44,31 @@ list_user = [
 def test_create_users(user_data):
     # Отправка POST-запроса для создания пользователя
     response = client.post("/user/create", json=user_data)
-    # Проверка, что статус код 200
-    assert response.status_code == 200
     # Проверка, что транзакция успешна
-    assert response.json() == {"status_code": 201, "transaction": "Successful"}
+    data = response.json()
+    if "detail" in data:
+        # Проверка, что статус код 404
+        # assert response.status_code == 404
+        assert False, f"{data['detail']}"
+    else:
+        # Проверка, что статус код 200
+        assert response.status_code == 200
+        # Проверка, что транзакция успешна
+        assert response.json() == {"status_code": 201, "transaction": "Successful"}
 
 
 def test_get_users():
-    # Отправка GET-запроса для создания пользователя
     response = client.get("/user/user_id?id=3")
-    # Проверка, что статус код 200
-    assert response.status_code == 200
-    # Проверка, что транзакция успешна
     data = response.json()
-    # Проверка структуры ответа
-    assert data["status_code"] == 200
-    assert data["transaction"] == "Successful"
-    assert data["user"]["id"] == 3
+    if "detail" in data:
+        # Проверка, что статус код 404
+        assert response.status_code == 404
+        assert False, f"{data['detail']}"
+    else:
+        # Проверка структуры ответа
+        assert data["status_code"] == 200
+        assert data["transaction"] == "Successful"
+        assert data["user"]["id"] == 3
 
 
 # Тестовые данные для обновления пользователя
@@ -74,22 +80,32 @@ def test_update_user():
         "age": 50
     }
     response = client.put("/user/update", params={"id": 3}, json=user_data)
-
-    # Проверка, что статус код 200
-    assert response.status_code == 200
-    # Проверка, что транзакция успешна
-    assert response.json() == {"status_code": 200, "transaction": "User update is successful!"}
+    data = response.json()
+    if "detail" in data:
+        # Проверка, что статус код 404
+        assert response.status_code == 404
+        assert False, f"{data['detail']}"
+    else:
+        # Проверка, что статус код 200
+        assert response.status_code == 200
+        # Проверка, что транзакция успешна
+        assert response.json() == {"status_code": 200, "transaction": "User update is successful!"}
 
 
 # Тестовые данные для удаления пользователя
 def test_delete_user():
     # Удаление пользователя с id=2
     response = client.delete("/user/delete", params={"id": 2})
-
-    # Проверка, что статус код 200
-    assert response.status_code == 200
-    # Проверка, что транзакция успешна
-    assert response.json() == {"status_code": 200, "transaction": "User delete is successful!"}
+    data = response.json()
+    if "detail" in data:
+        # Проверка, что статус код 404
+        assert response.status_code == 404
+        assert False, f"{data['detail']}"
+    else:
+        # Проверка, что статус код 200
+        assert response.status_code == 200
+        # Проверка, что транзакция успешна
+        assert response.json() == {"status_code": 200, "transaction": "User delete is successful!"}
 
 
 # Тестовые данные для получения всех пользователей
@@ -131,12 +147,10 @@ def test_delete_non_existent_user():
 # Удаляем все задания
 def test_delete_all_task():
     response = client.delete("/task/deleteAllTask")
-
+    data = response.json()
     assert response.status_code == 200
-    if response.json() == {"transaction": "All task deleted"}:
-        assert response.json() == {"transaction": "All task deleted"}
-    elif response.json() == {"transaction": "No task to delete"}:
-        assert response.json() == {"transaction": "No task to delete"}
+    if data['transaction'] not in ("No task to delete", "All task deleted"):
+        assert False, f"{data}"
 
 
 list_tasks = [

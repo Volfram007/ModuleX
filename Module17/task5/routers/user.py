@@ -75,18 +75,19 @@ def delete_user(db: Annotated[Session, Depends(get_db)], id: int):
     return {'status_code': status.HTTP_200_OK, 'transaction': 'User delete is successful!'}
 
 
-# Удаление всех пользователей из базы данных
-@router.delete("/deleteAllUsers")
+# Удаление всех пользователей и задач из базы данных
+@router.delete("/deleteAll")
 def delete_all_users(db: Annotated[Session, Depends(get_db)]):
     # Проверяем, есть ли пользователи в базе данных
     result = db.execute(select(User)).scalars().all()
 
     if result:  # Если список пользователей не пуст
         db.execute(delete(User))
+        db.execute(delete(Task))
         db.commit()
-        return {'status_code': status.HTTP_200_OK, 'transaction': 'All users deleted!'}
+        return {'status_code': status.HTTP_200_OK, 'transaction': 'All users and tasks deleted!'}
     else:  # Если список пользователей пуст
-        return {'status_code': status.HTTP_200_OK, 'transaction': 'No users to delete'}
+        return {'status_code': status.HTTP_200_OK, 'transaction': 'No users and tasks to delete'}
 
 
 # Получение всех задач пользователя по id

@@ -42,14 +42,15 @@ def test_create_users(user_data):
 def test_get_users():
     # Отправка GET-запроса для создания пользователя
     response = client.get("/user/user_id?id=3")
-    # Проверка, что статус код 200
-    assert response.status_code == 200
     # Проверка, что транзакция успешна
     data = response.json()
-    # Проверка структуры ответа
-    assert data["status_code"] == 200
-    assert data["transaction"] == "Successful"
-    assert data["user"]["id"] == 3
+    # assert isinstance(data, dict)
+    if "detail" in data:
+        # Проверка, что статус код 404
+        # assert response.status_code == 404
+        assert False, f"{data['detail']}"
+    else:
+        assert data["id"] == 3
 
 
 def test_update_user():
@@ -60,11 +61,14 @@ def test_update_user():
         "age": 50
     }
     response = client.put("/user/update?id=3", json=user_data)
-
-    # Проверка, что статус код 200
-    assert response.status_code == 200
-    # Проверка, что транзакция успешна
-    assert response.json() == {"status_code": 200, "transaction": "User update is successful!"}
+    data = response.json()
+    if "detail" in data:
+        assert False, f"{data['detail']}"
+    else:
+        # Проверка, что статус код 200
+        assert response.status_code == 200
+        # Проверка, что транзакция успешна
+        assert response.json() == {"status_code": 200, "transaction": "User update is successful!"}
 
 
 def test_delete_user():

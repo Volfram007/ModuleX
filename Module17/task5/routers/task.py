@@ -9,11 +9,13 @@ from slugify import slugify
 
 router = APIRouter(prefix="/task", tags=["task"])
 
+
 # Получение всех задач
 @router.get("/")
 def all_tasks(db: Annotated[Session, Depends(get_db)]):
     tasks = db.scalars(select(Task)).all()
     return tasks
+
 
 # Получение задачи по id
 @router.get("/task_id")
@@ -22,6 +24,7 @@ def get_task(db: Annotated[Session, Depends(get_db)], id: int):
     if task is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Task was not found')
     return task
+
 
 # Создание задачи
 @router.post("/create")
@@ -40,6 +43,7 @@ def create_task(db: Annotated[Session, Depends(get_db)], create_task: CreateTask
     db.commit()
     return {'status_code': status.HTTP_201_CREATED, 'transaction': 'Successful'}
 
+
 # Обновление задачи по id
 @router.put("/update")
 def update_task(db: Annotated[Session, Depends(get_db)], update_task: UpdateTask, id: int):
@@ -54,6 +58,7 @@ def update_task(db: Annotated[Session, Depends(get_db)], update_task: UpdateTask
     db.commit()
     return {'status_code': status.HTTP_200_OK, 'transaction': 'Task update is successful!'}
 
+
 # Удаление задачи по id
 @router.delete("/delete")
 def delete_task(db: Annotated[Session, Depends(get_db)], id: int):
@@ -64,6 +69,7 @@ def delete_task(db: Annotated[Session, Depends(get_db)], id: int):
     db.execute(delete(Task).where(Task.id == id))
     db.commit()
     return {'status_code': status.HTTP_200_OK, 'transaction': 'Task delete is successful!'}
+
 
 # Удаление всех задач
 @router.delete("/deleteAllTask")

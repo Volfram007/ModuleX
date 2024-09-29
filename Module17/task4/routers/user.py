@@ -22,7 +22,7 @@ def get_user(db: Annotated[Session, Depends(get_db)], id: int):
     # Получение пользователя по id
     user = db.scalar(select(User).where(User.id == id))
     if user is not None:
-        return {'status_code': status.HTTP_200_OK, 'transaction': 'Successful', 'user': user}
+        return user
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User was not found')
 
