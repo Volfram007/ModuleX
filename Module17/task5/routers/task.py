@@ -62,7 +62,7 @@ def update_task(db: Annotated[Session, Depends(get_db)], update_task: UpdateTask
 # Удаление задачи по id
 @router.delete("/delete")
 def delete_task(db: Annotated[Session, Depends(get_db)], id: int):
-    task = db.scalars(select(Task).where(Task.id == id))
+    task = db.scalar(select(Task).where(Task.id == id))
     if task is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Task was not found')
 
