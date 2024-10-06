@@ -6,6 +6,16 @@ import pytest
 # Создаём тестовый клиент
 client = TestClient(app)
 
+
+# Удаляем всех пользователей
+def test_delete_all():
+    response = client.delete("/user/deleteAll")
+    data = response.json()
+    assert response.status_code == 200
+    if data['transaction'] not in ("All users and tasks deleted!", "No users and tasks to delete"):
+        assert False, f"{data}"
+
+
 # Тестовые данные для создания нескольких пользователей
 test_create = [
     {

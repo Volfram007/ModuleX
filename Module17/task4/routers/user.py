@@ -30,7 +30,7 @@ def get_user(db: Annotated[Session, Depends(get_db)], id: int):
 @router.post("/create")
 def create_user(db: Annotated[Session, Depends(get_db)], create_user: CreateUser):
     # Проверка на существование пользователя
-    existing_user = db.scalars(select(User).where(User.username == create_user.username)).first()
+    existing_user = db.scalar(select(User).where(User.username == create_user.username))
     if existing_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User with this username already exists")
 
@@ -45,7 +45,7 @@ def create_user(db: Annotated[Session, Depends(get_db)], create_user: CreateUser
 
 @router.put("/update")
 def update_user(db: Annotated[Session, Depends(get_db)], update_user: UpdateUser, id: int):
-    user = db.scalars(select(User).where(User.id == id)).first()
+    user = db.scalar(select(User).where(User.id == id))
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'User was not found')
     db.execute(update(User).where(User.id == id).values(
@@ -59,7 +59,7 @@ def update_user(db: Annotated[Session, Depends(get_db)], update_user: UpdateUser
 
 @router.delete("/delete")
 def delete_user(db: Annotated[Session, Depends(get_db)], id: int):
-    user = db.scalars(select(User).where(User.id == id)).first()
+    user = db.scalar(select(User).where(User.id == id))
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User was not found')
 
@@ -67,3 +67,17 @@ def delete_user(db: Annotated[Session, Depends(get_db)], id: int):
     db.commit()
 
     return {'status_code': status.HTTP_200_OK, 'transaction': 'User delete is successful!'}
+
+
+# Удаление всех пользователей и задач из базы данных
+@router.delete("/deleteAll")
+def delete_all_users(db: Annotated[Session, Depends(get_db)]):
+    # Проверяем, есть ли пользователи в базе данных
+    result = db.execute(select(User)).scalars().all()
+
+    if result:  # Если список пользователей не пуст
+        db.execute(delete(User))
+        db.commit()
+        return {'status_code': status.HTTP_200_OK, 'transaction': 'All users and tasks deleted!'}
+    else:  # Если список пользователей пуст
+        return {'status_code': status.HTTP_200_OK, 'transaction': 'No users and tasks to delete'}
