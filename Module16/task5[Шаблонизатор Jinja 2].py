@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Path, Request
+from fastapi import FastAPI, Path, Request, Body
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
@@ -38,6 +38,31 @@ async def get_user(request: Request, user_id: int):
         return templates.TemplateResponse("users.html", {"request": request, "user": user})
     else:
         return {"error: User not found"}
+
+
+@app.delete("/users/{user_id}")
+async def delete_user(user_id: int):
+    if 0 <= user_id < len(users_db):
+        users_db.pop(user_id)
+        for idx, user in enumerate(users_db):
+            user.id = idx
+        return {"message": "User deleted successfully"}
+    else:
+        return {"error: User not found"}
+
+
+@app.put("/users/{user_id}")
+async def update_user(
+        user_id: int,
+        username: str = Body(...),
+        age: int = Body(...)
+):
+    if 0 <= user_id < len(users_db):
+        users_db[user_id].username = username
+        users_db[user_id].age = age
+        return {"message": "User updated successfully"}
+    else:
+        return {"error": "User not found"}
 
 
 client = TestClient(app)
